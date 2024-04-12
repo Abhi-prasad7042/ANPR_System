@@ -20,6 +20,7 @@
             margin-left: auto;
             margin-right: auto;
             margin-top: 3%;
+            display:none;
         }
 
         .details{
@@ -69,6 +70,8 @@
         <div class="w-50 mt-4">
             {% if image_url %}
                 <img src="{{image_url}}" alt="Uploaded Image" id="cont" class="mx-auto card" style="width: 640px; height: 300px;">
+            {% else %}
+                <img src="https://t4.ftcdn.net/jpg/01/64/16/59/360_F_164165971_ELxPPwdwHYEhg4vZ3F4Ej7OmZVzqq4Ov.jpg" alt="Uploaded Image" id="cont" class="mx-auto" style="width: 640px; height: 300px;">
             {% endif %}
         </div> 
     </div>
@@ -121,6 +124,9 @@
         document.getElementById('state').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.messages[3].subtitle || 'Not Found';
         document.getElementById('code').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.messages[0].subtitle || 'Not Found';
         document.getElementById('loc').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.messages[1].subtitle || 'Not Found';
+        
+        const descriptionContent = document.querySelector('.description-content');
+        descriptionContent.style.display = 'block';
     })
 
     </script>
