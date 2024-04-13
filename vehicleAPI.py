@@ -9,25 +9,20 @@ driver = webdriver.Chrome()
 # Open the webpage
 driver.get('https://www.cars24.com/rto-vehicle-registration-details/')
 
-try:
-    # Find the input element and set its value
-    input_element = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input.form-control')))
-    input_element.send_keys('HR26AU0637')  # Set the value of the input field
+# Find the input element and set its value
+input_element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input.form-control')))
+input_element.send_keys('HR26AU0637')  # Set the value of the input field
 
-    # Find and click the button
-    button_element = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button._2iiQB._3qpfi')))
-    button_element.click()
+buttons = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'button._2iiQB._3qpfi')))
 
-    # Wait for the next page to load
-    WebDriverWait(driver, 20).until(EC.url_changes(driver.current_url))
+# Click the second button
+buttons[1].click()
 
-    # Now you can access the new URL
-    new_url = driver.current_url
-    print("Next page URL:", new_url)
+WebDriverWait(driver, 10).until(EC.url_changes(driver.current_url))
 
-except Exception as e:
-    print("An error occurred:", e)
+# Now you can access the new URL
+new_url = driver.current_url
+print("Next page URL:", new_url)
 
-finally:
-    # Close the browser
-    driver.quit()
+element = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'some_element_selector')))
+element.click() 
