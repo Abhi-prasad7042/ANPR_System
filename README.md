@@ -17,7 +17,8 @@ To set up the ANPR system locally, follow these simple steps:
 1. Clone this repository to your local machine.
 2. Install the necessary dependencies using `pip install -r requirements.txt`.
 3. Start the Django server by running `python manage.py runserver`.
-4. Open your web browser and navigate to `http://localhost:8000` to access the ANPR system.
+  - If the project is giving some error regarding the table please run `python manage.py makemigrations` and `python manage.py migrate`.
+5. Open your web browser and navigate to `http://localhost:8000` to access the ANPR system.
 
 ## Usage
 
