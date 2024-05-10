@@ -68,8 +68,8 @@
         </div>
 
         <div class="w-50 mt-4">
-            {% if image_url %}
-                <img src="{{image_url}}" alt="Uploaded Image" id="cont" class="mx-auto card" style="width: 640px; height: 300px;">
+            {% if image_base64 %}
+                <img src="{{image_base64}}" alt="Uploaded Image" id="cont" class="mx-auto card" style="width: 640px; height: 300px;">
             {% else %}
                 <img src="https://t4.ftcdn.net/jpg/01/64/16/59/360_F_164165971_ELxPPwdwHYEhg4vZ3F4Ej7OmZVzqq4Ov.jpg" alt="Uploaded Image" id="cont" class="mx-auto" style="width: 640px; height: 300px;">
             {% endif %}
@@ -106,12 +106,46 @@
             return true;
         }
 
-        let num = "{{number}}"
+        let num = {{ result_json|safe }}
 
         console.log("ocr:- ", num)
 
-        const fetchData = async ()=>{
-            const response = await fetch("https://www.carinfo.app/_next/data/m3jXnTcG9Plj9OMSj4dEF/rc-details/"+num+".json?rc="+num)
+        const fetchData = async (number) => {
+            const response = await fetch("https://www.carinfo.app/_next/data/TFwkQkjeSCDePm8-WaFgI/rc-details/" + number[0] + ".json?rc=" + number[0]);
+            const data = await response.json();
+            return data;
+        }
+        
+        // Array to store all promises returned by fetchData function
+        const promises = [];
+        
+        // Iterate over each number in num and make an API call
+        num.forEach(numberArray => {
+            const promise = fetchData(numberArray);
+            promises.push(promise);
+        });
+        
+        // Wait for all promises to resolve
+        Promise.all(promises).then(responses => {
+            responses.forEach(data => {
+                console.log(data);
+                console.log(data?.pageProps?.rcDetailsResponse?.data?.webSections[0]?.message?.subtitle.split(" ")[0]);
+                document.getElementById('number').textContent = data.pageProps?.rc || 'Not Found';
+                document.getElementById('company').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.message?.subtitle.split(" ")[0] || 'Not Found';
+                document.getElementById('model').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.message?.subtitle.split(" ").slice(1).join(" ") || 'Not Found';
+                document.getElementById('state').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.messages[3].subtitle || 'Not Found';
+                document.getElementById('code').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.messages[0].subtitle || 'Not Found';
+                document.getElementById('loc').textContent = data.pageProps?.rcDetailsResponse?.data?.webSections[0]?.messages[1].subtitle || 'Not Found';
+                
+                const descriptionContent = document.querySelector('.description-content');
+                descriptionContent.style.display = 'block';
+            });
+        }).catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
+        {% comment %} const fetchData = async ()=>{
+            const response = await fetch("https://www.carinfo.app/_next/data/zOaNMdVLtkfaIM6TrR2a5/rc-details/"+num+".json?rc="+num)
             const data = response.json()
             return data
         }
@@ -127,7 +161,7 @@
         
         const descriptionContent = document.querySelector('.description-content');
         descriptionContent.style.display = 'block';
-    })
+    }) {% endcomment %}
 
     </script>
 
